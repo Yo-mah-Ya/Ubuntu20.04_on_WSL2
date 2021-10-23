@@ -278,3 +278,4 @@ if "${SSL_SCAN_would_be_installed}" ; then
     echo "alias sslscan=\"~/sslscan/sslscan\"" >> ~/.bashrc && source ~/.bashrc
     cd ~
 fi
+
