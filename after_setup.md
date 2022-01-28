@@ -14,6 +14,23 @@ export PS1='\u@\h:\w$(ls .git > /dev/null 2>&1 && git branch | grep "^*.\+$" | s
 
 Services >  OpenSSH Authentication Agent > Properties > General > Startup type > Automatic
 
+# SSH Agent
+
+`~/.ssh/config`
+
+```
+HostKeyAlgorithms +ssh-dss
+AddKeysToAgent yes
+Host *
+    ForwardAgent yes
+```
+
+`~/.bashrc`
+
+```sh
+eval $(ssh-agent)
+ssh-add path/to/private_key
+```
 
 #  Git Hub
 
