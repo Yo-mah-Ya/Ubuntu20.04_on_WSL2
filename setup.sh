@@ -210,10 +210,16 @@ fi
 #######################################################
 if "${Golang_would_be_installed}" ; then
     cd ~
-    wget https://golang.org/dl/go1.17.2.linux-amd64.tar.gz
-    tar -C /usr/local -xzf go1.17.2.linux-amd64.tar.gz
-    echo 'export PATH=${PATH}:/usr/local/go/bin' >> ~/.bashrc && . ~/.bashrc
-    go env -w GO111MODULE=on
+    git clone https://github.com/syndbg/goenv.git ~/.goenv
+    echo 'export GOENV_ROOT="$HOME/.goenv"' >> ~/.bashrc
+    echo 'export PATH="$GOENV_ROOT/bin:$PATH"' >> ~/.bashrc
+    echo 'eval "$(goenv init -)"' >> ~/.bashrc
+
+    goenv install -l
+    goenv install 1.18beta1
+    goenv global 1.18beta1
+
+    # go env -w GO111MODULE=on
     check_status $?
 fi
 
