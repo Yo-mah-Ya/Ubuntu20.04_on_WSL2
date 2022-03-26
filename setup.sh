@@ -122,7 +122,7 @@ fi
 #######################################################
 if "${AWS_SDK_FOR_CPP_would_be_installed}"; then
     cd ~
-    apt install -y libcurl4-openssl-dev libssl-dev uuid-dev zlib1g-dev libpulse-dev cmake
+    apt install -y libcurl4-openssl-dev uuid-dev zlib1g-dev libpulse-dev cmake
 
     #aws-c-common
     cd ~
@@ -157,36 +157,40 @@ if "${AWS_SDK_FOR_CPP_would_be_installed}"; then
 fi
 
 #######################################################
-# Python3.9.2
+# Python
 #######################################################
 if "${Python_would_be_installed}" ; then
     cd ~
-    #install "dependencies"
-    apt install -y libreadline-dev libncursesw5-dev libssl-dev libsqlite3-dev libgdbm-dev libbz2-dev liblzma-dev zlib1g-dev uuid-dev libffi-dev libdb-dev
-    #install "Python3.9.2" from "python.org"
-    wget https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tar.xz && tar -xf Python-3.9.2.tar.xz && cd Python-3.9.2 && \
-    ./configure --enable-optimizations && make -s -j4 && make altinstall
+    # dependencies
+    apt install -y \
+    	libreadline-dev libncursesw5-dev \
+    	libsqlite3-dev libgdbm-dev libbz2-dev liblzma-dev \
+        zlib1g-dev uuid-dev libffi-dev libdb-dev
+
+    # pyenv
+    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+    echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
     check_status $?
-    #set "python" Symbolic link
-    tmp="$(which python3.9)"
-    ln -s ${tmp} "${tmp%/*}/python"
+
+    # insatll version 3.9.10
+    pyenv install 3.9.10
+	pyenv global 3.9.10
     python --version
     check_status $?
-    #enable "venv"
-    cd ~
-    python -m venv env && \
-    echo "source ~/env/bin/activate" >> ~/.bashrc && source ~/.bashrc && \
-    ln -s "${tmp%/*}/python" ~/env/bin/python
-    . ~/.bashrc
-    python --version
+
+    # enable "venv"
     check_status $?
-    #install pip
+    # install pip
     cd ~
     curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.pyy
     pip --version
     check_status $?
     pip install --upgrade pip
-    #install Python libraries
+    pip install poetry
+
+    # install Python libraries
     apt install libpq-dev -y
     # pip install awscli beautifulsoup4 boto3 coverage django flask flask-cors gunicorn gspread
     # pip install numpy openpyxl pandas requests pipdeptree psycopg2 pyarrow pycrypto pyorc pyspark
@@ -198,11 +202,15 @@ fi
 #######################################################
 if "${NodeJS_would_be_installed}" ; then
     cd ~
-    apt install nodejs npm -y && \
-    npm install n -g && n stable && \
-    apt purge nodejs npm -y && apt autoremove -y
+
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+	source ~/.bashrc
     check_status $?
-    echo "export NODE_PATH=$(npm root -g)" >> ~/.bashrc && source ~/.bashrc
+
+    nvm install v16.13.1
+
+    npm install -g yarn@1.22.18
+    echo 'export NODE_PATH=$(npm root -g)' >> ~/.bashrc
 fi
 
 #######################################################
@@ -229,7 +237,7 @@ fi
 
 if "${Swift_would_be_installed}" ; then
     cd ~
-    sudo apt install clang libicu-dev libcurl4-openssl-dev libssl-dev -y
+    sudo apt install clang libicu-dev libcurl4-openssl-dev -y
     wget https://swift.org/builds/swift-5.2.5-release/ubuntu2004/swift-5.2.5-RELEASE/swift-5.2.5-RELEASE-ubuntu20.04.tar.gz
     tar xzvf swift-5.2.5-RELEASE-ubuntu20.04.tar.gz
     mv swift-5.2.5-RELEASE-ubuntu20.04.tar.gz /usr/local/bin/swift
@@ -241,10 +249,17 @@ fi
 #######################################################
 if "${Java_would_be_installed}" ; then
     cd ~
+    git clone https://github.com/jenv/jenv.git ~/.jenv
+    echo 'export PATH="$HOME/.jenv/bin:$PATH"' >> ~/.bashrc
+    echo 'eval "$(jenv init -)"' >> ~/.bashrc
+	. ~/bashrc
     apt search openjdk-\(\.\)\+-jdk$
-    apt install openjdk-17-jdk -y && \
+    apt install openjdk-11-jdk -y && \
     java --version && javac --version
     check_status $?
+    jenv add /usr/lib/jvm/java-11-openjdk-amd64
+    jenv versions
+    jenv global 11
 fi
 
 #######################################################
@@ -254,7 +269,7 @@ if "${PostgreSQL_would_be_installed}"; then
     cd ~
     #To avoid following Error, reinstall "GPG"
     #gpg: can't connect to the agent: IPC connect call failed
-    #Import the repository key from the following website
+    # import the repository key from the following website
     apt purge -y gpg && apt install -y ca-certificates gnupg1 && \
     curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
     check_status $?
@@ -267,7 +282,7 @@ if "${PostgreSQL_would_be_installed}"; then
     sudo curl https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo apt-key add
     sudo sh -c 'echo "deb https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
 
-    #install "PostgreSQL 12"
+    # install "PostgreSQL 12"
     apt update -y
     apt install -y postgresql-12 pgadmin4
     check_status $?
@@ -284,4 +299,3 @@ if "${SSL_SCAN_would_be_installed}" ; then
     echo "alias sslscan=\"~/sslscan/sslscan\"" >> ~/.bashrc && source ~/.bashrc
     cd ~
 fi
-
