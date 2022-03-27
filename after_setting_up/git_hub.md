@@ -1,37 +1,3 @@
-
-#  Git
-
-```shell
-~$ git config --global user.name  #write User name
-~$ git config --global user.email #write User email
-~$ git config --global push.default simple
-~$ git config --global core.sshcommand $(which ssh)
-~$ git config --global core.editor vim
-
-# add this line to ~/.bashrc
-export PS1='\u@\h:\w$(ls .git > /dev/null 2>&1 && git branch | grep "^*.\+$" | sed 's/*//g' | xargs -i echo \({}\)) \$ '
-```
-
-Services >  OpenSSH Authentication Agent > Properties > General > Startup type > Automatic
-
-# SSH Agent
-
-`~/.ssh/config`
-
-```
-HostKeyAlgorithms +ssh-dss
-AddKeysToAgent yes
-Host *
-    ForwardAgent yes
-```
-
-`~/.bashrc`
-
-```sh
-eval $(ssh-agent)
-ssh-add path/to/private_key
-```
-
 #  Git Hub
 
 ```shell
@@ -65,21 +31,4 @@ Host git-codecommit.*.amazonaws.com
 ~$ git fetch
 ~$ git merge --allow-unrelated-histories origin/master
 ~$ git push origin master
-```
-
-#  Git Secrets
-
-~$ git secrets --register-aws --global
-
-# PostgreSQL
-
-```
-~# passwd postgres
-~# sudo su postgres
-~# psql
-
-postgres=# alter role postgres with password '***Your password***';
-postgres=# \q
-
-~# service postgresql start
 ```
