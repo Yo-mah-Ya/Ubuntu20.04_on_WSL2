@@ -16,11 +16,9 @@ echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
 echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 source ~/.bashrc
 
-# insatll version 3.9.10
-pyenv install 3.9.10
-pyenv global 3.9.10
+pyenv install 3.12.8
+pyenv global 3.12.8
 
-# install pip
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.pyy
 pip install --upgrade pip
 pip install poetry

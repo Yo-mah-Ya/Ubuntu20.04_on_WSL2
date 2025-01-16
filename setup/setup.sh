@@ -7,34 +7,9 @@ SCRIPTS_DIR=${SOURCE_DIR}/scripts
 
 DEBIAN_FRONTEND=noninteractive
 
-# build-essential
 cd ~
-sudo apt update -y && sudo apt install build-essential -y
-
-
-# Other useful libraries
-sudo apt install -y \
-        clang-tidy \
-        clang-format \
-        google-mock \
-        jq \
-        libcurl4-openssl-dev \
-        liblog4cxx-dev \
-        libssl-dev \
-        libprotobuf-dev \
-        libboost-all-dev \
-        libgtest-dev \
-        libpulse-dev \
-        nfs-common \
-        openssl \
-        protobuf-compiler \
-        python-setuptools \
-        tree \
-        unzip \
-        uuid-dev \
-        zip \
-        zlib1g-dev \
-        zsh
+sudo apt update -y
+. dependencies.sh
 
 # OpenSSL
 # sudo curl https://www.openssl.org/source/old/1.0.2/openssl-1.0.2u.tar.gz
@@ -58,10 +33,6 @@ sudo apt install -y \
 
 # cmake
 . ${SCRIPTS_DIR}/cmake.sh
-
-# Mosquitto
-cd ~
-sudo apt install -y mosquitto
 
 # git-secrets
 . ${SCRIPTS_DIR}/git_secrets.sh
